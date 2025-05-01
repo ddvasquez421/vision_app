@@ -76,7 +76,7 @@ api_key = os.environ.get('OPENAI_API_KEY') # Usar .get() es más seguro
 # Inicializa el cliente solo si hay una API key
 client = None
 if api_key:
-    client = OpenAI(api_key=api_key)
+    client = OpenAI(api_key=api_key)
 else:
     st.warning("Por favor, proporciona tu Clave del Saber para proceder.")
 
