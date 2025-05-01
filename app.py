@@ -7,56 +7,115 @@ from openai import OpenAI
 def encode_image(image_file):
     return base64.b64encode(image_file.getvalue()).decode("utf-8")
 
+# Establecer la configuración de la página
+st.set_page_config(page_title="Análisis de Imagen", layout="centered", initial_sidebar_state="collapsed")
 
-st.set_page_config(page_title="Analisis de imagen", layout="centered", initial_sidebar_state="collapsed")
-# Streamlit page setup
-st.title("Análisis de Imagen:🤖🏞️")
-ke = st.text_input('Ingresa tu Clave')
+# Cambiar estilo para darle un aire renacentista
+st.markdown("""
+    <style>
+        /* Fondo en tonos cálidos, como los usados en las pinturas del Renacimiento */
+        body {
+            background-color: #f5e1a4;
+            font-family: 'Garamond', serif;
+            color: #3e2a47;
+        }
+
+        /* Títulos con un estilo clásico */
+        .title {
+            font-size: 2.5em;
+            font-family: 'Georgia', serif;
+            color: #4a2c3e;
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        /* Botones con un estilo de sello clásico */
+        .stButton>button {
+            background-color: #b88b4a;
+            color: #ffffff;
+            font-size: 16px;
+            border-radius: 12px;
+            border: none;
+            padding: 12px 30px;
+            font-family: 'Garamond', serif;
+        }
+
+        /* Estilo para los encabezados */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Georgia', serif;
+            color: #4a2c3e;
+        }
+
+        /* Estilo de las entradas de texto y área de texto */
+        .stTextInput>div>input, .stTextArea>div>textarea {
+            background-color: #fff3e6;
+            color: #3e2a47;
+            font-family: 'Garamond', serif;
+            border: 2px solid #b88b4a;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        /* Color del contorno de los elementos de selección */
+        .stFileUploader {
+            border: 2px solid #b88b4a;
+            border-radius: 10px;
+        }
+
+        /* Estilo del expander (para la imagen) */
+        .stExpander {
+            background-color: #f0e2c2;
+            border: 1px solid #b88b4a;
+            border-radius: 8px;
+        }
+    </style>
+""", unsafe_allow_html=True)
+
+# Título principal
+st.markdown('<h1 class="title">Análisis de Imagen Renacentista</h1>', unsafe_allow_html=True)
+
+ke = st.text_input('Ingresa tu Clave', placeholder='Tu API key aquí...')
 os.environ['OPENAI_API_KEY'] = ke
 
-
-# Retrieve the OpenAI API Key from secrets
+# Recuperar la clave API de OpenAI
 api_key = os.environ['OPENAI_API_KEY']
 
-# Initialize the OpenAI client with the API key
+# Inicializar el cliente de OpenAI
 client = OpenAI(api_key=api_key)
 
-# File uploader allows user to add their own image
-uploaded_file = st.file_uploader("Upload an image", type=["jpg", "png", "jpeg"])
+# Subir una imagen
+uploaded_file = st.file_uploader("Sube una imagen", type=["jpg", "png", "jpeg"])
 
 if uploaded_file:
-    # Display the uploaded image
-    with st.expander("Image", expanded = True):
+    # Mostrar la imagen subida
+    with st.expander("Imagen", expanded=True):
         st.image(uploaded_file, caption=uploaded_file.name, use_container_width=True)
 
-# Toggle for showing additional details input
-show_details = st.toggle("Adiciona detalles sobre la imagen", value=False)
+# Entrada adicional de detalles
+show_details = st.toggle("Añadir detalles sobre la imagen", value=False)
 
 if show_details:
-    # Text input for additional details about the image, shown only if toggle is True
     additional_details = st.text_area(
-        "Adiciona contexto de la imagen aqui:",
+        "Añade contexto de la imagen aquí:",
         disabled=not show_details
     )
 
-# Button to trigger the analysis
-analyze_button = st.button("Analiza la imagen", type="secondary")
+# Botón para iniciar el análisis
+analyze_button = st.button("Analiza la imagen", type="primary")
 
-# Check if an image has been uploaded, if the API key is available, and if the button has been pressed
+# Análisis cuando la imagen es subida, la clave API está disponible y el botón es presionado
 if uploaded_file is not None and api_key and analyze_button:
 
     with st.spinner("Analizando ..."):
-        # Encode the image
+        # Codificar la imagen
         base64_image = encode_image(uploaded_file)
     
-        prompt_text = ("Describe what you see in the image in spanish")
+        prompt_text = ("Describe lo que ves en la imagen en español.")
     
         if show_details and additional_details:
-            prompt_text += (
-                f"\n\nAdditional Context Provided by the User:\n{additional_details}"
-            )
+            prompt_text += f"\n\nDetalles adicionales proporcionados por el usuario:\n{additional_details}"
     
-        # Create the payload for the completion request - CORRECTED FORMAT
+        # Crear el mensaje para la solicitud de la API
         messages = [
             {
                 "role": "user",
@@ -72,27 +131,24 @@ if uploaded_file is not None and api_key and analyze_button:
             }
         ]
     
-        # Make the request to the OpenAI API
+        # Solicitar la API de OpenAI
         try:
-            # Stream the response
             full_response = ""
             message_placeholder = st.empty()
             for completion in client.chat.completions.create(
                 model="gpt-4o", messages=messages,   
                 max_tokens=1200, stream=True
             ):
-                # Check if there is content to display
                 if completion.choices[0].delta.content is not None:
                     full_response += completion.choices[0].delta.content
                     message_placeholder.markdown(full_response + "▌")
-            # Final update to placeholder after the stream ends
             message_placeholder.markdown(full_response)
     
         except Exception as e:
-            st.error(f"An error occurred: {e}")
+            st.error(f"Se produjo un error: {e}")
 else:
-    # Warnings for user action required
+    # Advertencias si falta acción por parte del usuario
     if not uploaded_file and analyze_button:
-        st.warning("Please upload an image.")
+        st.warning("Por favor, sube una imagen.")
     if not api_key:
-        st.warning("Por favor ingresa tu API key.")
+        st.warning("Por favor ingresa tu clave de API.")
