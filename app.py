@@ -11,24 +11,52 @@ def encode_image(image_file):
 st.markdown("""
     <style>
     body {
-        background-color: #f5e1a4;  /* Beige, renacentista */
-        color: #4b3c2f;  /* Color de texto clásico */
+        background-image: url('https://upload.wikimedia.org/wikipedia/commons/f/f8/The_Allegory_of_Truth_and_Falsehood%2C_by_Federico_Zuccari.jpg');  /* Fondo de imagen estilo renacentista */
+        background-size: cover;  /* Asegura que la imagen cubra toda la página */
+        color: #FFF8E1;  /* Color claro para el texto */
+        font-family: 'Georgia', serif;  /* Fuente clásica diferente */
+        margin: 0;
+        padding: 0;
     }
-    .streamlit-expanderHeader {
-        font-family: 'Times New Roman', Times, serif;
+    .stApp {
+        background-color: rgba(0, 0, 0, 0.5);  /* Fondo oscuro semi-transparente para mejorar la legibilidad */
+        padding: 20px;
+        border-radius: 15px;
     }
     h1, h2, h3, h4, h5, h6 {
-        font-family: 'Times New Roman', Times, serif;  /* Fuente clásica */
+        font-family: 'Georgia', serif;
+        color: #FAF3E0;
     }
     .stTextInput, .stTextArea, .stButton {
-        font-family: 'Times New Roman', Times, serif;  /* Fuente clásica para los inputs */
+        font-family: 'Georgia', serif;
+        font-size: 16px;
+        border-radius: 10px;
+        padding: 10px;
     }
     .stButton>button {
-        background-color: #d8c7a1;  /* Un color más cálido para los botones */
-        color: #4b3c2f;  /* Color del texto en los botones */
+        background-color: #B29D79;  /* Un color cálido para los botones */
+        color: white;
+        font-size: 16px;
+        border-radius: 5px;
+        padding: 10px;
     }
-    .stTextInput>div, .stTextArea>div {
-        border-radius: 10px;  /* Bordes redondeados para inputs */
+    .stTextInput input, .stTextArea textarea {
+        background-color: #FAF3E0;
+        color: #4B3C2F;  /* Color del texto */
+        border: 2px solid #4B3C2F;
+        font-size: 16px;
+    }
+    .stFileUploader {
+        background-color: #B29D79;
+        color: white;
+        border-radius: 10px;
+        font-size: 16px;
+    }
+    .stToggle {
+        background-color: #B29D79;
+        color: white;
+        font-size: 16px;
+        border-radius: 5px;
     }
     </style>
 """, unsafe_allow_html=True)
