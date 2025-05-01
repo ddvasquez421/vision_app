@@ -21,62 +21,26 @@ renaissance_css = """
 @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap');
 
 html, body, [data-testid="stAppViewContainer"] {
-    background-color: #e5d8b0 !important; /* Un dorado pálido renacentista para el fondo general */
-    color: #4f3d2c !important; /* Un marrón oscuro para el texto general */
+    background-color: #e5d8b0 !important; /* Un dorado pálido renacentista */
+    color: #4f3d2c !important; /* Un marrón oscuro para el texto */
     font-family: 'EB Garamond', Georgia, Palatino Linotype, Palatino, serif !important; /* Fuente clásica con alternativas */
 }
 
-/* Estilo para títulos y encabezados */
+
 h1, h2, h3, h4, h5, h6 {
     color: #6b503d !important; /* Un marrón más rojizo para los encabezados */
     font-family: 'EB Garamond', Georgia, Palatino Linotype, Palatino, serif !important;
 }
 
-/* --- ESTILOS AÑADIDOS PARA LOS CUADROS (Input, Botones, Uploader, etc.) --- */
+/* Ajustes menores para otros elementos si es necesario */
+/* input, textarea, button { border-color: #6b503d; } */
+/* button { background-color: #6b503d; color: white; } */
 
-/* Estilo para campos de texto (input, text area), botón, uploader de archivo y cabecera del expander */
-/* Aplicamos el color de fondo similar al del cuadro de advertencia */
-[data-testid="stTextInput"] input,
-[data-testid="stTextArea"] textarea,
-[data-testid="stButton"] button,
-[data-testid="stFileUploader"],
-[data-testid="stExpander"] label {
-    background-color: #7C7000 !important; /* Muted dark yellowish-brown */
-    border-color: #5A4B00 !important; /* Darker border */
-    color: #f0f0f0 !important; /* Light text color for readability */
+/* Asegurarse de que los componentes de Streamlit hereden el estilo de fuente y color */
+div[data-testid] {
+    font-family: 'EB Garamond', Georgia, Palatino Linotype, Palatino, serif !important;
+    color: #4f3d2c !important;
 }
-
-/* Asegurar el color del texto para los labels dentro de uploader y expander */
-[data-testid="stFileUploader"] label,
-[data-testid="stExpander"] label span {
-     color: #f0f0f0 !important;
-}
-
-/* Ajustar el color del texto del placeholder en inputs/textareas */
-[data-testid="stTextInput"] input::placeholder,
-[data-testid="stTextArea"] textarea::placeholder {
-    color: #cccccc !important; /* Lighter placeholder text */
-}
-
-/* Estilo específico para el texto del botón para asegurar el color */
-[data-testid="stButton"] button > div > span {
-     color: #f0f0f0 !important;
-}
-
-/* Opcional: Estilo para el cuadro de advertencia mismo si quieres que su color sea *exactamente* ese y no el default de Streamlit */
-/*
-[data-testid="stAlert"]-warning {
-    background-color: #7C7000 !important;
-    color: #f0f0f0 !important;
-    border-color: #5A4B00 !important;
-}
-[data-testid="stAlert"]-warning .stMarkdown {
-    color: #f0f0f0 !important;
-}
-*/
-
-/* --- FIN DE ESTILOS AÑADIDOS --- */
-
 
 /* Puedes añadir estilos de scrollbar si quieres un control total de la apariencia */
 /*
@@ -97,12 +61,12 @@ h1, h2, h3, h4, h5, h6 {
 </style>
 """
 
-# Inject the CSS into the Streamlit app
+# Inject the CSS into the Streamlit app (Ahora después de set_page_config)
 st.markdown(renaissance_css, unsafe_allow_html=True)
 # --- End CSS ---
 
 
-# Streamlit page setup (El resto de comandos st. van después de set_page_config y la inyección CSS)
+# Streamlit page setup (El resto de comandos st. van después de set_page_config)
 st.title("Análisis de Imagen: 👁️‍🗨️✨")
 
 ke = st.text_input('Ingresa tu Clave del Saber (API Key)')
@@ -116,7 +80,6 @@ client = None
 if api_key:
     client = OpenAI(api_key=api_key)
 else:
-    # Este es el st.warning que inspiró el color
     st.warning("Por favor, proporciona tu Clave del Saber para proceder.")
 
 
