@@ -7,127 +7,81 @@ from openai import OpenAI
 def encode_image(image_file):
     return base64.b64encode(image_file.getvalue()).decode("utf-8")
 
-# Configuración de la página con Streamlit
-st.set_page_config(page_title="Análisis de Imagen", layout="centered", initial_sidebar_state="collapsed")
-
-# Estilo Renacentista: Se agregan colores, fuentes y bordes cálidos
+# Custom CSS to style the page
 st.markdown("""
     <style>
-        /* Estilo de fondo suave y cálido, inspirado en los tonos tierra del Renacimiento */
-        body {
-            background-color: #f4e1d2; 
-            font-family: 'Georgia', serif;
-            color: #3e2a47;
-        }
-
-        /* Estilo de título con tipografía clásica */
-        .title {
-            font-size: 3em;
-            font-family: 'Georgia', serif;
-            color: #4a2c3e;
-            text-align: center;
-            margin-bottom: 50px;
-        }
-
-        /* Estilo de botones en tonos dorados y elegantes */
-        .stButton>button {
-            background-color: #b88b4a;
-            color: #fff;
-            font-size: 18px;
-            border-radius: 12px;
-            padding: 15px 40px;
-            font-family: 'Georgia', serif;
-            text-transform: uppercase;
-        }
-
-        /* Bordes y sombra suaves para entradas de texto */
-        .stTextInput>div>input, .stTextArea>div>textarea {
-            background-color: #fff3e6;
-            color: #3e2a47;
-            font-family: 'Georgia', serif;
-            border: 2px solid #b88b4a;
-            border-radius: 8px;
-            font-size: 16px;
-            padding: 12px;
-        }
-
-        /* Estilo de los encabezados */
-        h1, h2, h3, h4, h5, h6 {
-            font-family: 'Georgia', serif;
-            color: #4a2c3e;
-            text-align: center;
-        }
-
-        /* Estilo para la carga de archivos */
-        .stFileUploader {
-            border: 2px solid #b88b4a;
-            border-radius: 10px;
-            padding: 10px;
-        }
-
-        /* Estilo de la imagen */
-        .stImage {
-            border-radius: 15px;
-            border: 5px solid #b88b4a;
-            padding: 20px;
-            background-color: #fff3e6;
-        }
-
-        /* Estilo para los desplegables */
-        .stExpander {
-            background-color: #f0e2c2;
-            border: 1px solid #b88b4a;
-            border-radius: 8px;
-        }
+    body {
+        background-color: #f5e1a4;  /* Beige, renacentista */
+        color: #4b3c2f;  /* Color de texto clásico */
+    }
+    .streamlit-expanderHeader {
+        font-family: 'Times New Roman', Times, serif;
+    }
+    h1, h2, h3, h4, h5, h6 {
+        font-family: 'Times New Roman', Times, serif;  /* Fuente clásica */
+    }
+    .stTextInput, .stTextArea, .stButton {
+        font-family: 'Times New Roman', Times, serif;  /* Fuente clásica para los inputs */
+    }
+    .stButton>button {
+        background-color: #d8c7a1;  /* Un color más cálido para los botones */
+        color: #4b3c2f;  /* Color del texto en los botones */
+    }
+    .stTextInput>div, .stTextArea>div {
+        border-radius: 10px;  /* Bordes redondeados para inputs */
+    }
     </style>
 """, unsafe_allow_html=True)
 
-# Título principal con fuente renacentista
-st.markdown('<h1 class="title">Análisis de Imagen Renacentista</h1>', unsafe_allow_html=True)
+st.set_page_config(page_title="Análisis de Imagen", layout="centered", initial_sidebar_state="collapsed")
 
-# Campo de entrada para la clave API
-ke = st.text_input('Ingresa tu Clave', placeholder='Tu API key aquí...')
+# Streamlit page setup
+st.title("Análisis de Imagen:🤖🏞️")
+ke = st.text_input('Ingresa tu Clave')
 os.environ['OPENAI_API_KEY'] = ke
 
-# Recuperar la clave API de OpenAI
+# Retrieve the OpenAI API Key from secrets
 api_key = os.environ['OPENAI_API_KEY']
 
-# Inicializar el cliente de OpenAI
+# Initialize the OpenAI client with the API key
 client = OpenAI(api_key=api_key)
 
-# Subir una imagen
-uploaded_file = st.file_uploader("Sube una imagen", type=["jpg", "png", "jpeg"])
+# File uploader allows user to add their own image
+uploaded_file = st.file_uploader("Upload an image", type=["jpg", "png", "jpeg"])
 
 if uploaded_file:
-    # Mostrar la imagen subida
-    with st.expander("Imagen", expanded=True):
+    # Display the uploaded image
+    with st.expander("Image", expanded=True):
         st.image(uploaded_file, caption=uploaded_file.name, use_container_width=True)
 
-# Entrada adicional de detalles
-show_details = st.toggle("Añadir detalles sobre la imagen", value=False)
+# Toggle for showing additional details input
+show_details = st.toggle("Adiciona detalles sobre la imagen", value=False)
 
 if show_details:
+    # Text input for additional details about the image, shown only if toggle is True
     additional_details = st.text_area(
-        "Añade contexto de la imagen aquí:",
+        "Adiciona contexto de la imagen aquí:",
         disabled=not show_details
     )
 
-# Botón para iniciar el análisis
-analyze_button = st.button("Analiza la imagen", type="primary")
+# Button to trigger the analysis
+analyze_button = st.button("Analiza la imagen", type="secondary")
 
-# Análisis cuando la imagen es subida, la clave API está disponible y el botón es presionado
+# Check if an image has been uploaded, if the API key is available, and if the button has been pressed
 if uploaded_file is not None and api_key and analyze_button:
 
     with st.spinner("Analizando ..."):
-        # Codificar la imagen
+        # Encode the image
         base64_image = encode_image(uploaded_file)
-    
-        prompt_text = ("Describe lo que ves en la imagen en español.")
-    
+
+        prompt_text = ("Describe lo que ves en la imagen en español")
+
         if show_details and additional_details:
-            prompt_text += f"\n\nDetalles adicionales proporcionados por el usuario:\n{additional_details}"
-    
-        # Crear el mensaje para la solicitud de la API
+            prompt_text += (
+                f"\n\nContexto adicional proporcionado por el usuario:\n{additional_details}"
+            )
+
+        # Create the payload for the completion request - CORRECTED FORMAT
         messages = [
             {
                 "role": "user",
@@ -142,25 +96,28 @@ if uploaded_file is not None and api_key and analyze_button:
                 ],
             }
         ]
-    
-        # Solicitar la API de OpenAI
+
+        # Make the request to the OpenAI API
         try:
+            # Stream the response
             full_response = ""
             message_placeholder = st.empty()
             for completion in client.chat.completions.create(
                 model="gpt-4o", messages=messages,   
                 max_tokens=1200, stream=True
             ):
+                # Check if there is content to display
                 if completion.choices[0].delta.content is not None:
                     full_response += completion.choices[0].delta.content
                     message_placeholder.markdown(full_response + "▌")
+            # Final update to placeholder after the stream ends
             message_placeholder.markdown(full_response)
-    
+
         except Exception as e:
-            st.error(f"Se produjo un error: {e}")
+            st.error(f"An error occurred: {e}")
 else:
-    # Advertencias si falta acción por parte del usuario
+    # Warnings for user action required
     if not uploaded_file and analyze_button:
-        st.warning("Por favor, sube una imagen.")
+        st.warning("Please upload an image.")
     if not api_key:
-        st.warning("Por favor ingresa tu clave de API.")
+        st.warning("Por favor ingresa tu API key.")
