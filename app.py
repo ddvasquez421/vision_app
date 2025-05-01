@@ -16,50 +16,54 @@ st.markdown("""
         /* Fondo en tonos cálidos, como los usados en las pinturas del Renacimiento */
         body {
             background-color: #f5e1a4;
-            font-family: 'Garamond', serif;
+            font-family: 'Georgia', serif;
             color: #3e2a47;
         }
 
         /* Títulos con un estilo clásico */
         .title {
-            font-size: 2.5em;
+            font-size: 3em;
             font-family: 'Georgia', serif;
             color: #4a2c3e;
             text-align: center;
             margin-bottom: 50px;
         }
 
-        /* Botones con un estilo de sello clásico */
+        /* Estilo de los botones */
         .stButton>button {
             background-color: #b88b4a;
             color: #ffffff;
-            font-size: 16px;
+            font-size: 18px;
             border-radius: 12px;
             border: none;
-            padding: 12px 30px;
-            font-family: 'Garamond', serif;
+            padding: 15px 40px;
+            font-family: 'Georgia', serif;
+            text-transform: uppercase;
         }
 
         /* Estilo para los encabezados */
         h1, h2, h3, h4, h5, h6 {
             font-family: 'Georgia', serif;
             color: #4a2c3e;
+            text-align: center;
         }
 
         /* Estilo de las entradas de texto y área de texto */
         .stTextInput>div>input, .stTextArea>div>textarea {
             background-color: #fff3e6;
             color: #3e2a47;
-            font-family: 'Garamond', serif;
+            font-family: 'Georgia', serif;
             border: 2px solid #b88b4a;
             border-radius: 8px;
             font-size: 16px;
+            padding: 12px;
         }
 
         /* Color del contorno de los elementos de selección */
         .stFileUploader {
             border: 2px solid #b88b4a;
             border-radius: 10px;
+            padding: 10px;
         }
 
         /* Estilo del expander (para la imagen) */
@@ -67,6 +71,14 @@ st.markdown("""
             background-color: #f0e2c2;
             border: 1px solid #b88b4a;
             border-radius: 8px;
+        }
+
+        /* Estilo para el contenedor de la imagen */
+        .stImage {
+            border-radius: 15px;
+            border: 5px solid #b88b4a;
+            padding: 20px;
+            background-color: #fff3e6;
         }
     </style>
 """, unsafe_allow_html=True)
