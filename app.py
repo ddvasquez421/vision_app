@@ -7,20 +7,20 @@ from openai import OpenAI
 def encode_image(image_file):
     return base64.b64encode(image_file.getvalue()).decode("utf-8")
 
-# Establecer la configuración de la página
+# Configuración de la página con Streamlit
 st.set_page_config(page_title="Análisis de Imagen", layout="centered", initial_sidebar_state="collapsed")
 
-# Cambiar estilo para darle un aire renacentista
+# Estilo Renacentista: Se agregan colores, fuentes y bordes cálidos
 st.markdown("""
     <style>
-        /* Fondo en tonos cálidos, como los usados en las pinturas del Renacimiento */
+        /* Estilo de fondo suave y cálido, inspirado en los tonos tierra del Renacimiento */
         body {
-            background-color: #f5e1a4;
+            background-color: #f4e1d2; 
             font-family: 'Georgia', serif;
             color: #3e2a47;
         }
 
-        /* Títulos con un estilo clásico */
+        /* Estilo de título con tipografía clásica */
         .title {
             font-size: 3em;
             font-family: 'Georgia', serif;
@@ -29,26 +29,18 @@ st.markdown("""
             margin-bottom: 50px;
         }
 
-        /* Estilo de los botones */
+        /* Estilo de botones en tonos dorados y elegantes */
         .stButton>button {
             background-color: #b88b4a;
-            color: #ffffff;
+            color: #fff;
             font-size: 18px;
             border-radius: 12px;
-            border: none;
             padding: 15px 40px;
             font-family: 'Georgia', serif;
             text-transform: uppercase;
         }
 
-        /* Estilo para los encabezados */
-        h1, h2, h3, h4, h5, h6 {
-            font-family: 'Georgia', serif;
-            color: #4a2c3e;
-            text-align: center;
-        }
-
-        /* Estilo de las entradas de texto y área de texto */
+        /* Bordes y sombra suaves para entradas de texto */
         .stTextInput>div>input, .stTextArea>div>textarea {
             background-color: #fff3e6;
             color: #3e2a47;
@@ -59,33 +51,41 @@ st.markdown("""
             padding: 12px;
         }
 
-        /* Color del contorno de los elementos de selección */
+        /* Estilo de los encabezados */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Georgia', serif;
+            color: #4a2c3e;
+            text-align: center;
+        }
+
+        /* Estilo para la carga de archivos */
         .stFileUploader {
             border: 2px solid #b88b4a;
             border-radius: 10px;
             padding: 10px;
         }
 
-        /* Estilo del expander (para la imagen) */
-        .stExpander {
-            background-color: #f0e2c2;
-            border: 1px solid #b88b4a;
-            border-radius: 8px;
-        }
-
-        /* Estilo para el contenedor de la imagen */
+        /* Estilo de la imagen */
         .stImage {
             border-radius: 15px;
             border: 5px solid #b88b4a;
             padding: 20px;
             background-color: #fff3e6;
         }
+
+        /* Estilo para los desplegables */
+        .stExpander {
+            background-color: #f0e2c2;
+            border: 1px solid #b88b4a;
+            border-radius: 8px;
+        }
     </style>
 """, unsafe_allow_html=True)
 
-# Título principal
+# Título principal con fuente renacentista
 st.markdown('<h1 class="title">Análisis de Imagen Renacentista</h1>', unsafe_allow_html=True)
 
+# Campo de entrada para la clave API
 ke = st.text_input('Ingresa tu Clave', placeholder='Tu API key aquí...')
 os.environ['OPENAI_API_KEY'] = ke
 
