@@ -5,7 +5,7 @@ from openai import OpenAI
 
 # --- CSS for Renaissance Aesthetics ---
 # You can adjust colors and fonts here
-renaissance_css = """
+renaissance_css = 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap');
 
@@ -15,7 +15,7 @@ html, body, [data-testid="stAppViewContainer"] {
     font-family: 'EB Garamond', Georgia, Palatino Linotype, Palatino, serif !important; /* Fuente clásica con alternativas */
 }
 
-/* Estilo para títulos y encabezados */
+
 h1, h2, h3, h4, h5, h6 {
     color: #6b503d !important; /* Un marrón más rojizo para los encabezados */
     font-family: 'EB Garamond', Georgia, Palatino Linotype, Palatino, serif !important;
