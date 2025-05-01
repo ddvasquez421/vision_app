@@ -3,6 +3,17 @@ import streamlit as st
 import base64
 from openai import OpenAI
 
+# Function to encode the image to base64
+def encode_image(image_file):
+    # Esta línea debe estar limpia de U+00A0
+    return base64.b64encode(image_file.getvalue()).decode("utf-8")
+
+# --- Streamlit Page Configuration ---
+# !!! ESTO DEBE SER LA PRIMERA LLAMADA A UN COMANDO st.!!!
+st.set_page_config(page_title="Analisis de imagen", layout="centered", initial_sidebar_state="collapsed")
+# --- End Page Configuration ---
+
+
 # --- CSS for Renaissance Aesthetics ---
 # You can adjust colors and fonts here
 renaissance_css = """
@@ -50,20 +61,12 @@ div[data-testid] {
 </style>
 """
 
-# Inject the CSS into the Streamlit app
+# Inject the CSS into the Streamlit app (Ahora después de set_page_config)
 st.markdown(renaissance_css, unsafe_allow_html=True)
 # --- End CSS ---
 
 
-# Function to encode the image to base64
-def encode_image(image_file):
-    # Esta línea debe estar limpia de U+00A0
-    return base64.b64encode(image_file.getvalue()).decode("utf-8")
-
-
-st.set_page_config(page_title="Analisis de imagen", layout="centered", initial_sidebar_state="collapsed")
-
-# Streamlit page setup
+# Streamlit page setup (El resto de comandos st. van después de set_page_config)
 st.title("Análisis de Imagen: 👁️‍🗨️✨")
 
 ke = st.text_input('Ingresa tu Clave del Saber (API Key)')
@@ -73,12 +76,10 @@ os.environ['OPENAI_API_KEY'] = ke
 api_key = os.environ.get('OPENAI_API_KEY')
 
 # Initialize the OpenAI client with the API key
-# !!! LINEA 81 SEÑALADA POR EL ERROR - ASEGÚRATE DE QUE ESTA LINEA Y LAS CERCANAS ESTÉN LIMPIAS DE U+00A0 !!!
 client = None
 if api_key:
     client = OpenAI(api_key=api_key)
 else:
-    # !!! LINEA 81 ACTUAL - ASEGÚRATE DE QUE ESTÉ LIMPIA TAMBIÉN !!!
     st.warning("Por favor, proporciona tu Clave del Saber para proceder.")
 
 
@@ -171,6 +172,5 @@ else:
     if analyze_button:
         if not uploaded_file:
             st.warning("Por favor, dignate a cargar una imagen para su estudio.")
-        # !!! LINEA 163 ACTUAL - ASEGÚRATE DE QUE ESTÉ LIMPIA TAMBIÉN !!!
         if not api_key or not client:
             st.warning("Se requiere tu Clave del Saber para invocar al oráculo.")
