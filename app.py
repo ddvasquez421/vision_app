@@ -5,7 +5,6 @@ from openai import OpenAI
 
 # --- CSS for Renaissance Aesthetics ---
 # You can adjust colors and fonts here
-# !!! CORRECCIÓN: Faltaban las comillas triples de apertura aquí !!!
 renaissance_css = """
 <style>
 @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap');
@@ -49,7 +48,7 @@ div[data-testid] {
 */
 
 </style>
-""" # Las comillas triples de cierre ya estaban correctas
+"""
 
 # Inject the CSS into the Streamlit app
 st.markdown(renaissance_css, unsafe_allow_html=True)
@@ -58,7 +57,8 @@ st.markdown(renaissance_css, unsafe_allow_html=True)
 
 # Function to encode the image to base64
 def encode_image(image_file):
-    return base64.b64b64encode(image_file.getvalue()).decode("utf-8")
+    # !!! LINEA CORREGIDA Y LIMPIADA DE CARACTERES ESPECIALES !!!
+    return base64.b64encode(image_file.getvalue()).decode("utf-8")
 
 
 st.set_page_config(page_title="Analisis de imagen", layout="centered", initial_sidebar_state="collapsed")
@@ -140,3 +140,36 @@ Procedo a presentarte la imagen para tu docto análisis:
                         "type": "image_url",
                         "image_url": {
                             "url": f"data:image/jpeg;base64,{base64_image}"
+                        }
+                    },
+                ],
+            }
+        ]
+
+        # Make the request to the OpenAI API
+        try:
+            # Stream the response
+            st.markdown("### Tratado sobre la Imagen:") # Título para la respuesta
+            full_response = ""
+            message_placeholder = st.empty()
+            for completion in client.chat.completions.create(
+                model="gpt-4o", messages=messages,
+                max_tokens=1500, stream=True # Aumenté max_tokens un poco para descripciones más ricas
+            ):
+                # Check if there is content to display
+                if completion.choices[0].delta.content is not None:
+                    full_response += completion.choices[0].delta.content
+                    # Usar markdown para que la respuesta respete el estilo de fuente y color
+                    message_placeholder.markdown(full_response + "▌")
+            # Final update to placeholder after the stream ends
+            message_placeholder.markdown(full_response)
+
+        except Exception as e:
+            st.error(f"Ha ocurrido un infortunio al procesar el análisis: {e}") # Texto más formal
+else:
+    # Warnings for user action required
+    if analyze_button: # Solo mostrar advertencias si se intentó analizar
+        if not uploaded_file:
+            st.warning("Por favor, dignate a cargar una imagen para su estudio.") # Texto más formal
+        if not api_key or not client:
+            st.warning("Se requiere tu Clave del Saber para invocar al oráculo.") # Texto más formal
